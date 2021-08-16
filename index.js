@@ -1,4 +1,8 @@
+const express = require('express'),
 morgan = require('morgan');
+
+const app = express();
+
 // Logging middleware (Morgan)
 app.use(morgan('common'));
 
@@ -65,3 +69,6 @@ app.use((err, req, res, next) => {
     res.status(500).send('Something broke!');
 });
 
+app.listen(8080, () => {
+    console.log('Your app is listening on port 8080.');
+});
