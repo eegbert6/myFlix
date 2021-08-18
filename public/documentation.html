@@ -54,12 +54,12 @@
                     <td>Allow new users to register</td>
                     <td>/users</td>
                     <td>POST</td>
-                    <td>A JSON object holding data about a user to add, structured like: </br>
-                    {</br>
-                    name: "John Doe"</br>
-                    email: "jd1234@email.com"</br>
-                    username: "JD1234"</br>
-                    password: "whoAmI?"</br>
+                    <td>A JSON object holding data about a user to add, structured like: <br>
+                    {<br>
+                    name: "John Doe"<br>
+                    email: "jd1234@email.com"<br>
+                    username: "JD1234"<br>
+                    password: "whoAmI?"<br>
                     }</td>
                     <td>A message indicating whether the registration was successful</td>
                 </tr>
@@ -67,12 +67,12 @@
                     <td>Allow users to update their info</td>
                     <td>/users/:username</td>
                     <td>PUT</td>
-                    <td>A JSON object holding data about a user to add, structured like: </br>
-                    {</br>
-                    name: "John Doe"</br>
-                    email: "jd1234@email.com"</br>
-                    username: "JD1234"</br>
-                    password: "whoAmI?"</br>
+                    <td>A JSON object holding data about a user to add, structured like: <br>
+                    {<br>
+                    name: "John Doe"<br>
+                    email: "jd1234@email.com"<br>
+                    username: "JD1234"<br>
+                    password: "whoAmI?"<br>
                     }</td>
                     <td>A message indicating whether the update was successful</td>
                 </tr>
@@ -82,6 +82,20 @@
                     <td>DELETE</td>
                     <td>None</td>
                     <td>A message indicating whether the user was deregistered</td>
+                </tr>
+                <tr>
+                    <td>Allow users to add a movie to their favorites list</td>
+                    <td>/users/:username/favorites/:title</td>
+                    <td>POST</td>
+                    <td>None</td>
+                    <td>A message indicating whether the movie was successfully added to their favorites list</td>
+                </tr>
+                <tr>
+                    <td>Allow users to remove a movie from their favorites list</td>
+                    <td>/users/:username/favorites/:title</td>
+                    <td>DELETE</td>
+                    <td>None</td>
+                    <td>A message indicating whether the movie was successfully removed from their favortes list</td>
                 </tr>
             </tbody>
         </table>
