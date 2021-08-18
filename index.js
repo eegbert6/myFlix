@@ -53,14 +53,108 @@ let topTenMovies = [
     }
 ]
 
-// Returning top ten movies
+// // Returning top ten movies
+// app.get('/movies', (req, res) => {
+//     res.json(topTenMovies);
+// });
+
+// // Returning welcome page
+// app.get('/', (req, res) => {
+//     res.send('Welcome to myFlix!');
+// });
+
+// -----------Movie Requests-----------
+// Returning a list of ALL movies
 app.get('/movies', (req, res) => {
-    res.json(topTenMovies);
+    res.json(movies);
 });
 
-// Returning welcome page
-app.get('/', (req, res) => {
-    res.send('Welcome to myFlix!');
+// Returning data about a single movie
+app.get('/movies/:title', (req, res) => {
+    res.json(movies.find((movie) => {
+        return movie.title === req.params.title
+    }));
+});
+
+// ----------Genre Requests----------
+// Returning data about a genre by name
+app.get('/genre/:name', (req, res) => {
+    res.json(genres);
+});
+
+// ----------Directors Requests----------
+// Returning data about directors by name
+app.get('/directors/:name', (req, res) => {
+    res.json(directors.find((director) => {
+        return directors.name === req.params.name
+    }));
+});
+
+// ----------User Requests----------
+// Allowing new users to register
+app.post('/users', (req, res) => {
+    let newUser = req.body;
+
+    if (!newUser.name) {
+        const message = 'Missing name in request body.';
+        res.status(400).send(message);
+    } else {
+        users.push(newUser);
+        res.status(201).send('You are successfully registered.');
+    }
+});
+
+// Allowing users to update their info
+app.put('/users/:username', (req, res) => {
+    let user = users.find((user) => {
+        return user.username === req.params.username
+    });
+
+    let userUpdated = req.body;
+
+    if (user) {
+        user = userUpdated;
+        res.status(201).send('The info for ' + req.params.username + ' has been updated.');
+    } else {
+        res.status(404).send(req.params.username + ' was not found.');
+    }
+});
+
+// Allowing users to deregister
+app.delete('users/:username', (req, res) => {
+    let user = users.find((user) => {
+        return user.username === req.params.username
+    });
+
+    if (user) {
+        users = users.filter((obj) => {
+            return obj.username !== req.params.username
+        });
+        res.status(201).send(req.params.username + ' was successfully deregistered.');
+    } else {
+        res.status(404).send(req.params.username + ' was not found.');
+    }
+});
+
+// ----------Favorites Requests----------
+// Allowing users to add a movie to their favorites list
+app.post('/users/:username/favorites/:title', (req, res) => {
+    let user = users.find((user) => {
+        return user.username === req.params.username
+    });
+
+    user.push(req.params.title);
+    res.status(201).send(req.params.title + ' was successfully added to ' + req.params.username + "'s favoite list.");
+});
+
+// Allowing users to remove a movie from their favorite list
+app.delete('/users/:username/favorites/:title', (req, res) => {
+    let user = users.find((user) => {
+        return user.username === req.params.username
+    });
+
+    user.pull(req.params.title);
+    res.status(201).send(req.params.title + ' was successfully removed from ' + req.params.userame + "'s favorite list.");
 });
 
 // Error handler
