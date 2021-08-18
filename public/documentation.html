@@ -50,6 +50,39 @@
                     <td>None</td>
                     <td>A JSON object holding data about a single director, containing a bio, birth year, and death year</td>
                 </tr>
+                <tr>
+                    <td>Allow new users to register</td>
+                    <td>/users</td>
+                    <td>POST</td>
+                    <td>A JSON object holding data about a user to add, structured like: </br>
+                    {</br>
+                    name: "John Doe"</br>
+                    email: "jd1234@email.com"</br>
+                    username: "JD1234"</br>
+                    password: "whoAmI?"</br>
+                    }</td>
+                    <td>A message indicating whether the registration was successful</td>
+                </tr>
+                <tr>
+                    <td>Allow users to update their info</td>
+                    <td>/users/:username</td>
+                    <td>PUT</td>
+                    <td>A JSON object holding data about a user to add, structured like: </br>
+                    {</br>
+                    name: "John Doe"</br>
+                    email: "jd1234@email.com"</br>
+                    username: "JD1234"</br>
+                    password: "whoAmI?"</br>
+                    }</td>
+                    <td>A message indicating whether the update was successful</td>
+                </tr>
+                <tr>
+                    <td>Allow users to deregister</td>
+                    <td>/users/:username</td>
+                    <td>DELETE</td>
+                    <td>None</td>
+                    <td>A message indicating whether the user was deregistered</td>
+                </tr>
             </tbody>
         </table>
     </body>
