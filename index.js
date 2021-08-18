@@ -66,12 +66,12 @@ let topTenMovies = [
 // -----------Movie Requests-----------
 // Returning a list of ALL movies
 app.get('/movies', (req, res) => {
-    res.json(movies);
+    res.json(topTenMovies);
 });
 
 // Returning data about a single movie
 app.get('/movies/:title', (req, res) => {
-    res.json(movies.find((movie) => {
+    res.json(topTenMovies.find((movie) => {
         return movie.title === req.params.title
     }));
 });
