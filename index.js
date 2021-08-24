@@ -141,23 +141,39 @@ app.post('/users', (req, res) => {
 });
 
 // Allowing users to update their info
+/* We'll expect JSON in this format
+{
+    Username: String,
+    (required)
+    Password: String,
+    (required)
+    Email: String,
+    (required)
+    Birthday: Date
+}*/
 app.put('/users/:username', (req, res) => {
-    let user = users.find((user) => {
-        return user.username === req.params.username
-    });
-
-    let userUpdated = req.body;
-
-    if (user) {
-        user = userUpdated;
-        res.status(201).send('The info for ' + req.params.username + ' has been updated.');
-    } else {
-        res.status(404).send(req.params.username + ' was not found.');
-    }
+    Users.findOneAndUpdate({Username: req.params.username}, 
+        {$set: 
+            {
+                Username: req.body.Username,
+                Password: req.body.Password,
+                Email: req.body.Email,
+                Birthday: req.body.Birthday
+            }
+        },
+        {new: true}, //This line makes sure that the updated document is returned
+        (err, updatedUser) => {
+            if(err) {
+                console.error(err);
+                res.status(500).send('Error: ' + err);
+            } else {
+                res.json(updatedUser);
+            }
+        });
 });
 
 // Allowing users to deregister
-app.delete('users/:username', (req, res) => {
+app.delete('/users/:username', (req, res) => {
     let user = users.find((user) => {
         return user.username === req.params.username
     });
@@ -170,6 +186,30 @@ app.delete('users/:username', (req, res) => {
     } else {
         res.status(404).send(req.params.username + ' was not found.');
     }
+});
+
+// Get all users
+app.get('/users', (req, res) => {
+    Users.find()
+        .then((user) => {
+            res.status(201).json(user);
+        })
+        .catch((err) => {
+            console.error(err);
+            res.status(500).send('Error: ' + err);
+        });
+});
+
+// Get a user by username
+app.get('/users/:username', (req, res) => {
+    Users.findOne({Username: req.params.username})
+        .then((user) => {
+            res.json(user);
+        })
+        .catch((err) => {
+            console.error(err);
+            res.status(500).send('Error: ' + err);
+        });
 });
 
 // ----------Favorites Requests----------
