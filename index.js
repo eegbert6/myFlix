@@ -230,12 +230,17 @@ app.post('/users/:username/favorites/:MovieID', (req, res) => {
 
 // Allowing users to remove a movie from their favorite list
 app.delete('/users/:username/favorites/:MovieID', (req, res) => {
-    let user = users.find((user) => {
-        return user.username === req.params.username
+    Users.findOneAndUpdate({Username: req.params.username},
+    {$pull: {FavoriteMovies: req.params.MovieID}},
+    {new: true},
+    (err, updatedUser) => {
+        if(err) {
+            console.error(err);
+            res.status(500).send('Error: ' + err);
+        } else {
+            res.json(updatedUser);
+        }
     });
-
-    user.pull(req.params.title);
-    res.status(201).send(req.params.title + ' was successfully removed from ' + req.params.userame + "'s favorite list.");
 });
 
 // Error handler
