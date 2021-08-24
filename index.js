@@ -79,14 +79,26 @@ let topTenMovies = [
 // -----------Movie Requests-----------
 // Returning a list of ALL movies
 app.get('/movies', (req, res) => {
-    res.json(topTenMovies);
+    Movies.find()
+        .then((movie) => {
+            res.status(201).json(movie);
+        })
+        .catch((err) => {
+            console.error(err);
+            res.status(500).send('Error: ' + err);
+        });
 });
 
 // Returning data about a single movie
 app.get('/movies/:title', (req, res) => {
-    res.json(topTenMovies.find((movie) => {
-        return movie.title === req.params.title
-    }));
+    Movies.findOne({Title: req.params.title})
+    .then((movie) => {
+        res.json(movie);
+    })
+    .catch((err) => {
+        console.error(err);
+        res.status(500).send('Error: ' + err);
+    });
 });
 
 // ----------Genre Requests----------
@@ -174,18 +186,18 @@ app.put('/users/:username', (req, res) => {
 
 // Allowing users to deregister
 app.delete('/users/:username', (req, res) => {
-    let user = users.find((user) => {
-        return user.username === req.params.username
-    });
-
-    if (user) {
-        users = users.filter((obj) => {
-            return obj.username !== req.params.username
+    Users.findOneAndRemove({Username: req.params.username})
+        .then((user) => {
+            if(!user) {
+                res.status(400).send(req.params.username + ' was not found');
+            } else {
+                res.status(200).send(req.params.username + ' was deleted.');
+            }
+        })
+        .catch((err) => {
+            console.error(err);
+            res.status(500).send('Error: ' + err);
         });
-        res.status(201).send(req.params.username + ' was successfully deregistered.');
-    } else {
-        res.status(404).send(req.params.username + ' was not found.');
-    }
 });
 
 // Get all users
