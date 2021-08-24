@@ -214,17 +214,22 @@ app.get('/users/:username', (req, res) => {
 
 // ----------Favorites Requests----------
 // Allowing users to add a movie to their favorites list
-app.post('/users/:username/favorites/:title', (req, res) => {
-    let user = users.find((user) => {
-        return user.username === req.params.username
+app.post('/users/:username/favorites/:MovieID', (req, res) => {
+    Users.findOneAndUpdate({Username: req.params.username},
+    {$push: {FavoriteMovies: req.params.MovieID}},
+    {new: true},
+    (err, updatedUser) => {
+        if(err) {
+            console.error(err);
+            res.status(500).send('Error: ' + err);
+        } else {
+            res.json(updatedUser);
+        }
     });
-
-    user.push(req.params.title);
-    res.status(201).send(req.params.title + ' was successfully added to ' + req.params.username + "'s favoite list.");
 });
 
 // Allowing users to remove a movie from their favorite list
-app.delete('/users/:username/favorites/:title', (req, res) => {
+app.delete('/users/:username/favorites/:MovieID', (req, res) => {
     let user = users.find((user) => {
         return user.username === req.params.username
     });
