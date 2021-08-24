@@ -1,15 +1,20 @@
 const express = require('express'),
 morgan = require('morgan');
 
+const bodyParser = require('body-parser');
+
 const mongoose = require('mongoose');
 const Models = require('./models.js');
 
 const Movies = Models.Movie;
 const Users = Models.User;
 
-mongoose.connect('mongodb://localhost:27017/myFlixDB', {use NewUrlParser: true, useUnifiedTopology: true});
+mongoose.connect('mongodb://localhost:27017/myFlixDB', {useNewUrlParser: true, useUnifiedTopology: true});
 
 const app = express();
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
 
 // Logging middleware (Morgan)
 app.use(morgan('common'));
@@ -100,16 +105,39 @@ app.get('/directors/:name', (req, res) => {
 
 // ----------User Requests----------
 // Allowing new users to register
-app.post('/users', (req, res) => {
-    let newUser = req.body;
+/* We'll except JSON in this format
+{
+    ID: Integer,
+    Username: String,
+    Password: String,
+    Email: String,
+    Birthday: Date
+}*/
 
-    if (!newUser.name) {
-        const message = 'Missing name in request body.';
-        res.status(400).send(message);
-    } else {
-        users.push(newUser);
-        res.status(201).send('You are successfully registered.');
-    }
+app.post('/users', (req, res) => {
+    Users.findOne({Username: req.body.Username})
+        .then((user) => {
+            if(user) {
+                return res.status(400).send(req.body.Username + ' already exists');
+            } else {
+                Users
+                    .create({
+                        Username: req.body.Username,
+                        Password: req.body.Password,
+                        Email: req.body.Email,
+                        Birthday: req.body.Birthday
+                    })
+                    .then((user) => {res.status(201).json(user)})
+                .catch((error) => {
+                    console.error(error);
+                    res.status(500).send('Error: ' + error);
+                })
+            }
+        })
+        .catch((error) => {
+            console.error(error);
+            res.status(500).send('Error: ' + error);
+        });
 });
 
 // Allowing users to update their info
@@ -166,10 +194,10 @@ app.delete('/users/:username/favorites/:title', (req, res) => {
 });
 
 // Error handler
-app.use((err, req, res, next) => {
-    console.log(err.stack);
-    res.status(500).send('Something broke!');
-});
+// app.use((err, req, res, next) => {
+//     console.log(err.stack);
+//     res.status(500).send('Something broke!');
+// });
 
 app.listen(8080, () => {
     console.log('Your app is listening on port 8080.');
