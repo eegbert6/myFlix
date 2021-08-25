@@ -104,15 +104,27 @@ app.get('/movies/:title', (req, res) => {
 // ----------Genre Requests----------
 // Returning data about a genre by name
 app.get('/genre/:name', (req, res) => {
-    res.json(genres);
+    Movies.find({'Genre.Name': req.params.name})
+        .then((movie) => {
+            res.status(201).json(movie);
+        })
+        .catch((err) => {
+            console.error(err);
+            res.status(500).send('Error: ' + err);
+        });
 });
 
 // ----------Directors Requests----------
 // Returning data about directors by name
 app.get('/directors/:name', (req, res) => {
-    res.json(directors.find((director) => {
-        return directors.name === req.params.name
-    }));
+    Movies.find({'Director.Name': req.params.name})
+        .then((movie) => {
+            res.status(201).json(movie);
+        })
+        .catch((err) => {
+            console.error(err);
+            res.status(500).send('Error: ' + err);
+        });
 });
 
 // ----------User Requests----------
