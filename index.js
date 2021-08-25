@@ -18,6 +18,9 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 let auth = require('./auth')(app);
 
+const passport = require('passport');
+require('./passport');
+
 // Logging middleware (Morgan)
 app.use(morgan('common'));
 
