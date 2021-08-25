@@ -16,6 +16,8 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
+let auth = require('./auth')(app);
+
 // Logging middleware (Morgan)
 app.use(morgan('common'));
 
