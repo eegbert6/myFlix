@@ -24,6 +24,8 @@ let auth = require('./auth')(app);
 const passport = require('passport');
 require('./passport');
 
+const { check, validationResult} = require('express-validator');
+
 // Logging middleware (Morgan)
 app.use(morgan('common'));
 
@@ -102,7 +104,20 @@ app.get('/directors/:name', passport.authenticate('jwt', {session: false}), (req
     Birthday: Date
 }*/
 
-app.post('/users', (req, res) => {
+app.post('/users',
+[
+    check('Username', 'Username is required'). isLength({min: 5}),
+    check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
+    check('Password', 'Password is required').not().isEmpty(),
+    check('Email', 'Email does not apper to be valid').isEmail()
+], (req, res) => {
+    // check the validation object for errors
+    let errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        return res.status(422).json({errors: errors.array()});
+    }
+
     let hashedPassword = Users.hashPassword(req.body.Password);
     Users.findOne({Username: req.body.Username})
         .then((user) => {
@@ -140,7 +155,21 @@ app.post('/users', (req, res) => {
     (required)
     Birthday: Date
 }*/
-app.put('/users/:username', passport.authenticate('jwt', {session: false}), (req, res) => {
+app.put('/users/:username',
+passport.authenticate('jwt', {session: false}),
+[
+    check('Username', 'Username is required'). isLength({min: 5}),
+    check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
+    check('Password', 'Password is required').not().isEmpty(),
+    check('Email', 'Email does not apper to be valid').isEmail()
+], (req, res) => {
+    // check the validation object for errors
+    let errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        return res.status(422).json({errors: errors.array()});
+    }
+    
     Users.findOneAndUpdate({Username: req.params.username}, 
         {$set: 
             {
