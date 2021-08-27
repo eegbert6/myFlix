@@ -169,7 +169,7 @@ passport.authenticate('jwt', {session: false}),
     if (!errors.isEmpty()) {
         return res.status(422).json({errors: errors.array()});
     }
-    
+
     Users.findOneAndUpdate({Username: req.params.username}, 
         {$set: 
             {
@@ -261,6 +261,7 @@ app.delete('/users/:username/favorites/:MovieID', passport.authenticate('jwt', {
     });
 });
 
-app.listen(8080, () => {
-    console.log('Your app is listening on port 8080.');
+const port = procces.env.PORT || 8080;
+app.listen(port, '0.0.0.0', () => {
+    console.log('Listening on Port ' + port);
 });
