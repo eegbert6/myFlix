@@ -257,7 +257,7 @@ app.delete('/users/:username/favorites/:MovieID', passport.authenticate('jwt', {
     });
 });
 
-const port = procces.env.PORT || 8080;
-app.listen(port, '0.0.0.0', () => {
-    console.log('Listening on Port ' + port);
+const port = process.env.PORT || 8080;
+app.listen(port, '0.0.0.0',() => {
+ console.log('Listening on Port ' + port);
 });
