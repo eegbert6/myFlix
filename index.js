@@ -33,15 +33,10 @@ app.use(morgan('common'));
 // For sending static files
 app.use(express.static('public'));
 
-// // Returning top ten movies
-// app.get('/movies', (req, res) => {
-//     res.json(topTenMovies);
-// });
-
-// // Returning welcome page
-// app.get('/', (req, res) => {
-//     res.send('Welcome to myFlix!');
-// });
+// Returning welcome page
+app.get('/', (req, res) => {
+    res.send('Welcome to myFlix!');
+});
 
 // -----------Movie Requests-----------
 // Returning a list of ALL movies
