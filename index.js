@@ -40,7 +40,7 @@ app.get('/', (req, res) => {
 
 // -----------Movie Requests-----------
 // Returning a list of ALL movies
-app.get('/movies', function (req, res) => {
+app.get('/movies', (req, res) => {
   Movies.find()
     .then((movie) => {
       res.status(201).json(movie);
